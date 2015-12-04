@@ -157,13 +157,13 @@ public class Throttler {
      * This method lets a user to add a predefined rule (pre-defined as a template), specifying desired parameters.
      * @param tier
      */
-    public synchronized void addRule(String tier) {
+    public synchronized void addRule(String tier, String requestCount, String unitTime) {
         deployRuleToLocalCEP(tier);
-        //deployRuleToGlobalCEP(tier);
+        //deployRuleToGlobalCEP(tier, requestCount, timeDuration);
     }
 
     //todo: this method has not being implemented completely. Will be done after doing perf tests.
-    private void deployRuleToGlobalCEP(String templateID, String parameter1, String parameter2){
+    private void deployRuleToGlobalCEP(String tier, String requestCount, String unitTime){
         String queries = TemplateStore.getEnforcementQuery();
 
         ExecutionPlanRuntime ruleRuntime = siddhiManager.createExecutionPlanRuntime("define stream RequestStream (messageID string, app_key string, api_key string, resource_key string, app_tier string, api_tier string, resource_tier string); " +

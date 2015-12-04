@@ -26,9 +26,27 @@ public class TemplateStore {
                                  "$THROTTLELEVEL_key AS key\n" +
                                  "INSERT INTO EligibilityStream;";
 
+    private static String ruleQueryTemplate ="FROM RequestStream\n" +
+                                "SELECT \"$THROTTLELEVEL_$TIER\" AS rule, messageID, (not ($THROTTLELEVEL_tier is null) AND $THROTTLELEVEL_tier==\"$TIER\") AS isEligible, " +
+                                "$THROTTLELEVEL_key AS key\n" +
+                                "INSERT INTO EligibilityStream;\n"+
+                                "\n"+
+                                "from EligibilityStream[rule==\"$THROTTLELEVEL_$TIER\" AND isEligible]\n" +
+                                "select *\n" +
+                                "insert into $THROTTLELEVEL_$TIERStream;\n" +
+                                "\n" +
+                                "from $THROTTLELEVEL_$TIERStream#window.time($UNITTIME milliseconds) \n" +
+                                "select key, (count(messageID) >= $REQUESTCOUNT) as isThrottled \n" +
+                                "group by key\n" +
+                                "insert all events into ResultStream;";
+
+
+
     private static String getEligibilityQueryTemplate() {
         return eligibilityQueryTemplate;
     }
+
+    public static String getRuleQueryTemplate() { return ruleQueryTemplate; }
 
     //todo: improve validation
     public static String getEligibilityQueries(String tier) {
@@ -47,5 +65,21 @@ public class TemplateStore {
     public static String getEnforcementQuery() {
         //todo: implement
         return "";
+    }
+
+    public static String getRuleQueries(String tier, String requestCount, String unitTime){
+        String ruleQueryTemplate = getRuleQueryTemplate();
+
+        StringBuilder builder = new StringBuilder();
+        for (ThrottleLevel level : ThrottleLevel.values()) {
+            String query = ruleQueryTemplate.replace("$THROTTLELEVEL", level.toString().toLowerCase());
+            query = query.replace("$TIER", tier);
+            query = query.replace("$UNITTIME", unitTime);
+            query = query.replace("$REQUESTCOUNT", requestCount);
+            builder.append(query);
+            builder.append("\n");
+        }
+        return builder.toString();
+
     }
 }

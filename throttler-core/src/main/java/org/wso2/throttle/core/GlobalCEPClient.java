@@ -36,7 +36,7 @@ public class GlobalCEPClient {
     private String port = "9453";                //CEP Server Management-Port
     private static String username = "admin";    //If the user is NOT from super tenant, username would be in the format 'user@tenantdomain.com'
     private static String password = "admin";
-    private static String cepHome = "/home/dilini/CEP/4.1.0/throttling/wso2cep-4.0.0_global";               //absolute location of CEP Server Home E.g. /home/dilini/CEP/4.1.0/throttling/wso2cep-4.0.0_global
+    private static String cepHome = "/home/upekka/wso2cep-4.0.0";               //absolute location of CEP Server Home E.g. /home/dilini/CEP/4.1.0/throttling/wso2cep-4.0.0_global
 
     /**
      * Initialize

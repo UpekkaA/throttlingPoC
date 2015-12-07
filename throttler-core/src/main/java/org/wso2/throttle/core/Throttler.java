@@ -36,6 +36,7 @@ import org.wso2.siddhi.core.event.Event;
 import org.wso2.siddhi.core.stream.input.InputHandler;
 import org.wso2.siddhi.core.stream.output.StreamCallback;
 import org.wso2.throttle.api.Request;
+import org.wso2.throttle.api.ThrottleLevel;
 import org.wso2.throttle.common.util.DatabridgeServerUtil;
 
 import java.io.IOException;
@@ -50,8 +51,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * Class which does throttling.
@@ -81,12 +80,12 @@ public class Throttler {
     private DataPublisher dataPublisher = null;
 
     private Throttler() {
-        this.start();
     }
 
     public static synchronized Throttler getInstance() {
         if (throttler == null) {
             throttler = new Throttler();
+            throttler.start();
         }
         return throttler;
     }
@@ -207,7 +206,7 @@ public class Throttler {
         requestStreamInputHandlerList.add(ruleRuntime.getInputHandler("RequestStream"));
 
         //Need to know current rule count to provide synchronous API
-        ruleCount++;
+        ruleCount = ruleCount + ThrottleLevel.values().length;
         ruleRuntime.start();
     }
 

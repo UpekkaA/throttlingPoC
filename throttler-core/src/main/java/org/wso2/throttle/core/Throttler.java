@@ -170,7 +170,7 @@ public class Throttler {
      */
     public synchronized void addRule(String tier, String requestCount, String unitTime) {
         deployRuleToLocalCEP(tier);
-        //deployRuleToGlobalCEP(tier, requestCount, timeDuration);
+        //deployRuleToGlobalCEP(tier, requestCount, unitTime);
     }
 
     //todo: this method has not being implemented completely. Will be done after doing perf tests.
@@ -279,7 +279,7 @@ public class Throttler {
         basicDataSource.setDriverClassName("com.mysql.jdbc.Driver");
         basicDataSource.setUrl("jdbc:mysql://localhost/org_wso2_throttle_DataSource");
         basicDataSource.setUsername("root");
-        basicDataSource.setPassword("root");
+        basicDataSource.setPassword("Upekka@1992");
 
         Connection connection = null;
         try {
